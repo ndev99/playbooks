@@ -1,0 +1,30 @@
+############################################################################################
+# FILE::SSHD CONFIGURATION
+############################################################################################
+AllowAgentForwarding no
+AllowTcpForwarding no
+X11Forwarding no
+UsePAM yes
+
+############################################################################################
+# SECTION::LOGGING
+############################################################################################
+SyslogFacility AUTH
+LogLevel INFO
+
+############################################################################################
+# SECTION::AUTHENTICATION METHODS
+############################################################################################
+KbdInteractiveAuthentication no
+KerberosAuthentication no
+GSSAPIAuthentication no
+HostbasedAuthentication no
+
+############################################################################################
+# SECTION::PASS/PUBKEY AUTH DIRECTIVES
+############################################################################################
+PermitRootLogin {{ sshd_root_login }}
+PasswordAuthentication {{ sshd_password_auth }}
+AuthorizedKeysFile .ssh/authorized_keys
+PubkeyAuthentication yes
+PermitEmptyPasswords no

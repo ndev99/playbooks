@@ -1,0 +1,6 @@
+---
+
+# default dns servers copied to /etc/resolv.conf
+dns_servers:
+  - "1.1.1.1"
+  - "1.0.0.1"

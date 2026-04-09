@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+- name: add rule to OUTPUT chain
+  ansible.builtin.template:
+    src: "etc/sysconfig/nftables.d/output.d/{{ item }}.nft.j2"
+    dest: "/etc/sysconfig/nftables.d/output.d/{{ item }}.nft"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  notify: reload nftables

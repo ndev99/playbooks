@@ -1,0 +1,46 @@
+---
+# sudoconf tasks
+
+- name: getent group wheel
+  ansible.builtin.getent:
+    key: "{{ sudogroup }}"
+    database: "group"
+    fail_key: false
+  failed_when: sudogroup is not defined
+
+- name: set getent shortened fact
+  ansible.builtin.set_fact:
+    sudogroup_exists: ansible_facts['getent_group'][sudogroup] != None
+
+- name: groupadd {{ sudogroup }}
+  ansible.builtin.group:
+    name: "{{ sudogroup }}"
+    state: "present"
+    system: true
+  when: not sudogroup_exists
+
+- name: require sudo user to be in wheel to use 'su'
+  when: sudogroup_exists
+  block:
+    - name: copy the sudoers configuration file to /etc/sudoers.d/{{ sudogroup }}
+      ansible.builtin.copy:
+        validate: "visudo -cf %s"
+        src: "etc/sudoers.d/{{ sudoconf }}"
+        dest: "/etc/sudoers.d/{{ sudogroup }}"
+        owner: "root"
+        group: "root"
+        mode: "0400"
+
+    - name: update /etc/pam.d/su (require root to know user password when using su)
+      ansible.builtin.lineinfile:
+        regexp: "^auth\\s+sufficient\\s+pam_rootok.so$"
+        line: "#auth sufficient pam_rootok.so"
+        path: "/etc/pam.d/su"
+        state: "present"
+
+    - name: update /etc/pam.d/su (require wheel group)
+      ansible.builtin.lineinfile:
+        regexp: "^#?auth\\s+required\\s+pam_wheel.so\\s+use_uid$"
+        line: "auth required pam_wheel.so use_uid"
+        path: "/etc/pam.d/su"
+        state: "present"

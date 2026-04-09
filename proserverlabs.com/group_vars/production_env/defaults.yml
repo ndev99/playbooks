@@ -1,0 +1,4 @@
+---
+# default repo mirror http url for vlan-id 100
+
+mirror_url: "http://mirrors.syslabs.com"

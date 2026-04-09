@@ -1,0 +1,11 @@
+---
+# userskel tasks
+
+- name: Copy local etc/skel to remote node
+  ansible.builtin.copy:
+    src: "etc/skel/"
+    dest: "/etc/skel/"
+    directory_mode: "0755"
+    owner: "root"
+    group: "root"
+    mode: "0644"

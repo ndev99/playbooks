@@ -1,0 +1,52 @@
+---
+# configure sshd_config for remote authentication
+
+- name: root user sshd configuration block
+  when: sshd_root_login == "yes"
+  block:
+    - name: stat /root/.ssh
+      ansible.builtin.stat:
+        path: "/root/.ssh"
+      register: result
+
+    - name: mkdir /root/.ssh
+      ansible.builtin.file:
+        path: "/root/.ssh"
+        owner: "root"
+        group: "root"
+        mode: "0755"
+      when: not result.stat.exists
+
+    - name: copy the root ssh key if root login is permitted
+      ansible.builtin.copy:
+        src: "root/.ssh/root-id_ed25519.pub"
+        dest: "/root/.ssh/authorized_keys"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+
+- name: cp etc/ssh/sshd_config.d/*.conf to /etc/ssh/sshd_config.d/*.conf on managed node
+  ansible.builtin.template:
+    src: "etc/ssh/sshd_config.d/{{ sshdconf }}.j2"
+    dest: "/etc/ssh/sshd_config.d/{{ sshdconf }}"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  loop:
+    - "25-ciphers.conf"
+    - "25-sshd.conf"
+  loop_control:
+    loop_var: "sshdconf"
+  notify: restart sshd
+
+- name: add proxy configuration when sshd_proxy is enabled
+  ansible.builtin.copy:
+    content: |
+      AllowAgentForwarding no
+      AllowTcpForwarding yes
+    dest: "/etc/ssh/sshd_config.d/15-proxy.conf"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  when: sshd_proxy == true
+  notify: restart sshd

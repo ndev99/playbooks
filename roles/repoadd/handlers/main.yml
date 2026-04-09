@@ -1,0 +1,12 @@
+---
+# handlers file for addrepos
+
+- name: clear cache
+  ansible.builtin.shell:
+    cmd: "rm -rf /var/cache/dnf"
+  changed_when: false
+
+- name: make cache
+  ansible.builtin.shell:
+    cmd: "dnf makecache"
+  changed_when: false

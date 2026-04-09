@@ -1,0 +1,9 @@
+---
+# tasks file for rootpasswd
+
+- name: update root password and optionally lock
+  ansible.builtin.user:
+    name: "root"
+    password_lock: "{{ lock_root }}"
+    password: "{{ passwd['root'] }}"
+    update_password: "always"

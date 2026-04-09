@@ -1,0 +1,7 @@
+---
+- name: install default packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: "present"
+  loop: "{{ packages }}"
+  when: packages is defined and ((packages | length) > 0)

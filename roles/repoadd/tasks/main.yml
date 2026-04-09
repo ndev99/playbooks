@@ -1,0 +1,42 @@
+---
+# pre-tasks to prepare to copy specified repo
+# configuration files to the remote node
+
+- name: find all existing configuration files
+  ansible.builtin.find:
+    paths: ["/{{ repos_path }}"]
+    patterns: ["*.repo", "*-*.repo"]
+  register: repos
+
+- name: save current state of repos_path
+  when: backups_path is defined and repos.matched > 0
+  block:
+    - name: create backup directory
+      ansible.builtin.file:
+        path: "{{ backups_path }}"
+        state: "directory"
+        owner: "root"
+        group: "root"
+        mode: "0755"
+
+    - name: save current state of repos_path
+      ansible.builtin.copy:
+        src: "{{ item.path }}"
+        dest: "{{ backups_path }}/{{ now(fmt='%Y%m%d') }}/"
+        directory_mode: "0755"
+        remote_src: true
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      loop: "{{ repos.files }}"
+
+    - name: delete old configuration files
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: "absent"
+      loop: "{{ repos.files }}"
+
+- name: include repoadd tasks
+  ansible.builtin.include_tasks:
+    file: "repoadd.yml"
+  loop: "{{ distribution_repos }}"

@@ -1,0 +1,10 @@
+---
+- name: reload postfix
+  ansible.builtin.systemd_service:
+    name: "postfix"
+    state: "reloaded"
+    enabled: true
+
+- name: update aliases
+  ansible.builtin.shell:
+    cmd: /usr/sbin/postalias hash:/etc/aliases

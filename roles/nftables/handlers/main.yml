@@ -1,0 +1,19 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: start nftables
+  ansible.builtin.systemd_service:
+    name: "nftables"
+    state: "started"
+    enabled: true
+
+- name: reload nftables
+  ansible.builtin.systemd_service:
+    name: "nftables"
+    state: "reloaded"
+    enabled: true
+
+- name: restart nftables
+  ansible.builtin.systemd_service:
+    name: "nftables"
+    state: "restarted"
+    enabled: true

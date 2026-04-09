@@ -1,0 +1,9 @@
+---
+- name: cp -R etc/sysctl.d/ to /etc/sysctl.d/ on the remote node
+  ansible.builtin.copy:
+    validate: "sysctl -p %s"
+    src: "etc/sysctl.d/"
+    dest: "/etc/sysctl.d/"
+    owner: "root"
+    group: "root"
+    mode: "0644"

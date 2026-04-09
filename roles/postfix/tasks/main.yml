@@ -1,0 +1,11 @@
+---
+- name: copy etc/aliases to /etc/aliases on remote node
+  ansible.builtin.template:
+    src: "etc/aliases.j2"
+    dest: "/etc/aliases"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: 
+  - update aliases
+  - reload postfix

@@ -1,0 +1,7 @@
+[{{ item.name }}]
+name={{ distribution_name | capitalize }} Linux {{ distribution_version }} - {{ item.name }}
+baseurl={{ item.baseurl }}
+gpgkey=file://{{ mirror_gpgkeypath }}
+gpgcheck={{ item.gpgcheck | int }}
+enabled={{ item.enabled | int }}
+metadata_expire=86400

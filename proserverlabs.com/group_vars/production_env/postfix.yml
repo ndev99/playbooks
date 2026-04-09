@@ -1,0 +1,45 @@
+---
+# postfix null-client configuration
+
+pf_files:
+  - name: "transport"
+    content: |
+      syslabs.com smtp:[smtp.syslabs.com]:2525
+    postmap: true
+
+pf_transport_maps: "hash:/etc/postfix/transport"
+pf_mynetworks_style: "host"
+pf_inet_interfaces: "loopback-only"
+pf_inet_protocols: "ipv4"
+
+pf_mydestination: "$myhostname, localhost.$mydomain, localhost"
+pf_mydomain: "syslabs.com"
+pf_myorigin: "$myhostname"
+
+pf_relay_domains: ""
+pf_relayhost: ""
+
+################################################################
+# VARS::rhel-system-roles.postfix
+################################################################
+postfix_files: "{{ pf_files }}"
+postfix_manage_firewall: false
+postfix_conf:
+  previous: replaced
+
+  transport_maps: "{{ pf_transport_maps }}"
+  alias_maps: "hash:/etc/aliases"
+  alias_database: "hash:/etc/aliases"
+
+  mynetworks_style: "{{ pf_mynetworks_style }}"
+  mynetworks: "{{ pf_mynetworks }}"
+
+  inet_interfaces: "{{ pf_inet_interfaces }}"
+  inet_protocols: "{{ pf_inet_protocols }}"
+
+  mydestination: "{{ pf_mydestination }}"
+  mydomain: "{{ pf_mydomain }}"
+  myorigin: "{{ pf_myorigin }}"
+
+  relay_domains: "{{ pf_relay_domains }}"
+  relayhost: "{{ pf_relayhost }}"

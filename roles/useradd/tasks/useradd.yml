@@ -1,0 +1,36 @@
+---
+# default useradd.yml tasks
+
+- name: add the new user account on remote node
+  ansible.builtin.user:
+    name: "{{ user.name }}"
+    update_password: "on_create"
+    password: "{{ passwd[user.name] }}"
+    groups: "{{ user.groups }}"
+    state: "present"
+    append: true
+  failed_when: passwd[user.name] is not defined
+  no_log: true
+
+- name: write the user ssh authorized_keys file to remote node
+  when: user.ssh_enabled
+  block:
+    - name: append to sshd_users list
+      ansible.builtin.set_fact:
+        sshd_users: "{{ (sshd_users + [user.name]) | default([user.name]) }}"
+
+    - name: make .ssh directory
+      ansible.builtin.file:
+        path: "/home/{{ user.name }}/.ssh"
+        state: "directory"
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
+        mode: "0755"
+
+    - name: copy keys to .ssh directory
+      ansible.builtin.copy:
+        src: "home/{{ user.name }}/.ssh/{{ user.ssh_pubkey }}"
+        dest: "/home/{{ user.name }}/.ssh/authorized_keys"
+        owner: "{{ user.name }}"
+        group: "{{ user.name }}"
+        mode: "0644"

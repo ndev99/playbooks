@@ -1,0 +1,5 @@
+---
+# repoadd ansible role vars
+
+backups_path: "/etc/yum.repos.d/backups"
+repos_path: "etc/yum.repos.d"

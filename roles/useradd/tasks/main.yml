@@ -1,0 +1,19 @@
+---
+# default useradd.yml tasks
+
+- name: include useradd.yml tasks
+  ansible.builtin.include_tasks:
+    file: "useradd.yml"
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: "user"
+  when: users is defined
+
+- name: copy etc/ssh/sshd_config.d/20-users.conf
+  ansible.builtin.template:
+    src: "etc/ssh/sshd_config.d/20-users.conf.j2"
+    dest: "/etc/ssh/sshd_config.d/20-users.conf"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  when: sshd_users is defined and ((sshd_users | length) > 0)

@@ -1,0 +1,22 @@
+---
+- name: disable NetworkManager /etc/resolv.conf management
+  ansible.builtin.copy:
+    src: "etc/NetworkManager/conf.d/99-dns.conf"
+    dest: "/etc/NetworkManager/conf.d/99-dns.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: reload NetworkManager 
+
+- name: write default nameservers to /etc/resolv.conf on remote node
+  ansible.builtin.copy:
+    content: |
+      ### default dns servers
+      {% for dns_server in dns_servers %}
+      nameserver {{ dns_server }}
+      {% endfor %}
+    dest: "/etc/resolv.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  failed_when: dns_servers is not defined or ((dns_servers | length) == 0)

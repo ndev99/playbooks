@@ -1,0 +1,7 @@
+---
+# default sshd configuration vars
+
+sshd_proxy: false
+sshd_root_login: "no"
+sshd_password_auth: "no"
+sshd_users: []

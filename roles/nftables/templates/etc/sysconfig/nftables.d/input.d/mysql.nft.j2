@@ -1,0 +1,5 @@
+#############################################
+# MYSQL DAEMON: INGRESS RULES
+#############################################
+
+ip saddr {{ subnet_cidr_range }} tcp dport 3306 meta nfproto ipv4 iif {{ ifname }} accept

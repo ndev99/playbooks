@@ -1,0 +1,19 @@
+---
+# Run site.yml (syslabs.com) ansible jobs
+
+- name: Run site.yml ansible jobs
+  hosts: all
+
+  roles:
+    - {role: sudoconf, tags: [sudoconf, never]}
+    - {role: sshdconf, tags: [sshdconf, never]}
+    - {role: userskel, tags: [userskel, never]}
+    - {role: useradd, tags: [useradd, never]}
+    - {role: rootpasswd, tags: [rootpasswd, never]}
+    - {role: hostname, tags: [hostname, never]}
+    - {role: dnsconf, tags: [dnsconf, never]}
+    - {role: repoadd, tags: [repoadd, never]}
+    - {role: packages, tags: [packages, never]}
+    - {role: postfix, tags: [postfix, never]}
+    - {role: sysctl, tags: [sysctl, never]}
+    - {role: nftables, tags: [nftables, never]}

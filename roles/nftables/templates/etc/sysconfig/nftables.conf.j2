@@ -1,0 +1,53 @@
+# Uncomment the include statement here to load the default config sample
+# in /etc/nftables for nftables service.
+
+# To customize, either edit the samples in /etc/nftables, append further
+# commands to the end of this file or overwrite it after first service
+# start by calling: 'nft list ruleset >/etc/sysconfig/nftables.conf'.
+# Sample configuration for nftables service.
+# Load this by calling 'nft -f /etc/nftables/main.nft'.
+
+# Note about base chain priorities:
+# The priority values used in these sample configs are
+# offset by 20 in order to avoid ambiguity when firewalld
+# is also running which uses an offset of 10. This means
+# that packets will traverse firewalld first and if not
+# dropped/rejected there will hit the chains defined here.
+# Chains created by iptables, ebtables and arptables tools
+# do not use an offset, so those chains are traversed first
+# in any case.
+
+# drop any existing nftables ruleset
+flush ruleset
+
+table inet nft_default {
+  chain INPUT {
+    type filter hook input priority filter; policy {{ input_policy }};
+
+    # rules applied to the loopback interface
+    iif lo accept
+
+    # default rules applied to the input chain
+    ct state related,established accept
+
+    # include additional rules targeting the input chain
+    include "/etc/sysconfig/nftables.d/input.d/*.nft"
+  }
+
+  chain OUTPUT {
+    type filter hook output priority filter; policy {{ output_policy }};
+
+    # rules applied to the loopback interface
+    oif lo accept
+
+    # default rules applied to the output chain
+    ct state related,established accept
+    
+    # include additional rules targeting the output chain
+    include "/etc/sysconfig/nftables.d/output.d/*.nft"
+  }
+
+  chain FORWARD {
+    type filter hook forward priority filter; policy {{ forward_policy }};
+  }
+}

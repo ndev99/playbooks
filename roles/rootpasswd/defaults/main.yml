@@ -1,0 +1,4 @@
+---
+# defaults file for rootpasswd
+
+lock_root: true

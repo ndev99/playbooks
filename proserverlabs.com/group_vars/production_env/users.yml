@@ -1,0 +1,11 @@
+---
+# default users to add to
+# production_env hosts
+
+lock_root: true
+
+users:
+  - name: "linux-adm99"
+    groups: ["wheel"]
+    ssh_enabled: true
+    ssh_pubkey: "admin-id_ed25519.pub"

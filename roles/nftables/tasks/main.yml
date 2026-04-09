@@ -1,0 +1,51 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: retrieve systemd services installed on remote node
+  ansible.builtin.service_facts:
+
+- name: systemctl disable --now firewalld
+  ansible.builtin.systemd_service:
+    name: "firewalld.service"
+    state: "stopped"
+    enabled: false
+    masked: true
+  when: ansible_facts['services']['firewalld.service'] is defined
+
+- name: dnf install -y nftables
+  ansible.builtin.package:
+    name: "nftables"
+    state: "present"
+
+- name: mkdir -p /etc/sysconfig/nftables.d/{input.d,output.d}
+  ansible.builtin.file:
+    path: "/etc/sysconfig/nftables.d/{{ item }}"
+    state: "directory"
+    recurse: true
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  loop:
+    - "input.d"
+    - "output.d"
+
+- name: copy nft input rules to remote node
+  ansible.builtin.include_tasks:
+    file: "add_input_rule.yml"
+  loop: "{{ input_rules }}"
+  when: input_rules is defined and ((input_rules | length) > 0)
+
+- name: copy nft output rules to remote node
+  ansible.builtin.include_tasks:
+    file: "add_output_rule.yml"
+  loop: "{{ output_rules }}"
+  when: output_rules is defined and ((output_rules | length) > 0)
+
+- name: cp etc/sysconfig/nftables.conf to /etc/sysconfig/nftables.conf on remote node
+  ansible.builtin.template:
+    validate: "nft --check --file %s"
+    src: "etc/sysconfig/nftables.conf.j2"
+    dest: "/etc/sysconfig/nftables.conf"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  notify: start nftables

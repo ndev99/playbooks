@@ -1,0 +1,5 @@
+#############################################
+# ISCSID TARGET::INPUT RULES
+#############################################
+
+ip saddr {{ subnet_cidr_range }} tcp dport 3260 meta nfproto ipv4 iif {{ ifname }} accept

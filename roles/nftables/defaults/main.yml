@@ -1,0 +1,13 @@
+---
+## default interface names
+ifname: "ens18"
+ofname: "ens18"
+
+## default policies
+output_policy: "accept"
+input_policy: "drop"
+forward_policy: "drop"
+
+output_rules: []
+input_rules:
+  - sshd

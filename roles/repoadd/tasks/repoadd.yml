@@ -1,0 +1,16 @@
+---
+# loopable repoadd task (included from main.yml)
+
+- name: copy repo configuration to remote node
+  ansible.builtin.template:
+    src: "{{ repos_path }}/name.repo.j2"
+    dest: "/{{ repos_path }}/{{ item.name }}.repo"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  notify:
+  - clear cache
+  - make cache
+
+- name: flush handlers to remake the yum/dnf cache (in the event package installations will occur)
+  ansible.builtin.meta: flush_handlers

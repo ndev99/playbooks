@@ -1,0 +1,18 @@
+---
+# non-distro specific repo config defaults
+
+distribution_repos:
+  - name: BaseOS
+    baseurl: "{{ mirror_baseurl }}/BaseOS/{{ url_prefix }}"
+    gpgcheck: true
+    enabled: true
+
+  - name: AppStream
+    baseurl: "{{ mirror_baseurl }}/AppStream/{{ url_prefix }}"
+    gpgcheck: true
+    enabled: true
+
+  - name: ResilientStorage
+    baseurl: "{{ mirror_baseurl }}/ResilientStorage/{{ url_prefix }}"
+    gpgcheck: true
+    enabled: true

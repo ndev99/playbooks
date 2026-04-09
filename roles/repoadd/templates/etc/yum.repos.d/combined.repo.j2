@@ -1,0 +1,11 @@
+{% for distribution_repo in distribution_repos %}
+[{{ distribution_repo.reponame }}]
+name={{ distribution_name }} Linux {{ distribution_version }} {{ distribution_repo.reponame | capitalize }}
+baseurl={{ distribution_repo.baseurl }}
+gpgkey={{ mirror_gpgkey }}
+gpgcheck={{ distribution_repo.gpgcheck | int }}
+enabled={{ distribution_repo.enabled | int }}
+metadata_expire=86400
+enabled_metadata=1
+
+{% endfor %}

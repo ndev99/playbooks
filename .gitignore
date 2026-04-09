@@ -1,0 +1,7 @@
+# default .gitignore
+ansible_collections/
+inventory/
+bootstrap/
+keys/
+log/
+secrets.yml

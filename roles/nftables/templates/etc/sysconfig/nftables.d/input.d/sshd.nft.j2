@@ -1,0 +1,9 @@
+#############################################
+# SSH DAEMON: INGRESS RULES
+#############################################
+
+{% if subnet_proxy_host is defined and subnet_proxy_host %}
+ip saddr {{ subnet_proxy_host }} tcp dport 22 meta nfproto ipv4 iif {{ ifname }} accept
+{% else %}
+ip saddr {{ subnet_cidr_range }} tcp dport 22 meta nfproto ipv4 iif {{ ifname }} accept
+{% endif %}

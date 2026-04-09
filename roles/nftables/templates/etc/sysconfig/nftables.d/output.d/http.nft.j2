@@ -1,0 +1,6 @@
+#############################################
+# EGRESS RULESET: HTTP/HTTPS
+#############################################
+
+oif {{ ofname }} tcp dport 443 accept
+oif {{ ofname }} tcp dport 80 accept

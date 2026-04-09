@@ -1,0 +1,14 @@
+#############################################
+# EGRESS RULESET: INSECURE-DNS
+#############################################
+
+set NAMESERVERS {
+  type ipv4_addr
+
+  elements = {
+    {{ dns_servers | join(',') }}
+  }
+}
+
+oif {{ ofname }} ip daddr @NAMESERVERS udp dport 53 accept
+oif {{ ofname }} daddr @NAMESERVERS tcp dport 53 accept

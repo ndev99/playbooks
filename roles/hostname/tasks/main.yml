@@ -1,0 +1,12 @@
+---
+- name: hostnamectl set-hostname {{ inventory_hostname }}
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: cp etc/hosts to /etc/hosts on remote node
+  ansible.builtin.template:
+    src: "etc/hosts.j2"
+    dest: "/etc/hosts"
+    owner: "root"
+    group: "root"
+    mode: "0644"

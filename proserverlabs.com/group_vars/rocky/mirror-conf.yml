@@ -1,0 +1,14 @@
+---
+# distribution details
+distribution_name: "rocky"
+distribution_version: "9.6"
+distribution_arch: "x86_64"
+
+# distribution and architecture
+# specific mirror url
+mirror_gpgkeyname: "RPM-GPG-KEY-Rocky-9"
+mirror_gpgkeyurl: "http://mirrors.syslabs.com/rocky/{{ mirror_gpgkeyname }}"
+mirror_gpgkeypath: "/etc/pki/rpm-gpg/{{ mirror_gpgkeyname }}"
+
+mirror_baseurl: "{{ mirror_url }}/{{ distribution_name }}/{{ distribution_version }}"
+url_prefix: "{{ distribution_arch }}/os"

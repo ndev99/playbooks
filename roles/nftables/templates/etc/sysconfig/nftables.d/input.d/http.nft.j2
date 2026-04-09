@@ -1,0 +1,6 @@
+#############################################
+# HTTP/HTTPS::INPUT RULES
+#############################################
+
+ip saddr {{ subnet_cidr_range }} tcp dport 443 meta nfproto ipv4 iif {{ ifname }} accept
+ip saddr {{ subnet_cidr_range }} tcp dport 80 meta nfproto ipv4 iif {{ ifname }} accept
